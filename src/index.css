@@ -6,6 +6,17 @@
   box-sizing: border-box;
 }
 
+html {
+  background: radial-gradient(circle, #ccc 15%, #fff 16%) 0/ 1em 1em space;
+}
+
 body {
   overflow: hidden;
+}
+
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
 }

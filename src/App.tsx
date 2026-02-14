@@ -1,5 +1,4 @@
 import GlobeGame from "./games/GlobeGame";
-import "./App.css";
 
 function App() {
   return (
