@@ -1,8 +1,10 @@
 import { useState, useEffect } from "react";
 import Globe from "react-globe.gl";
 import "./GlobeGame.css";
+import { Button } from "@/components/ui/button";
+import { House } from "lucide-react";
 
-function GlobeGame() {
+function GlobeGame({ onHome }: { onHome: () => void }) {
   const [countries, setCountries] = useState<{ features: object[] }>({
     features: [],
   });
@@ -14,7 +16,8 @@ function GlobeGame() {
   }, []);
 
   return (
-    <div className="globe-container">
+    <div className="globe-container relative">
+      <Button size="icon" className="absolute top-4 right-4 z-10 cursor-pointer" onClick={onHome}><House /></Button>
       <Globe
         globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg"
         hexPolygonsData={countries.features}
