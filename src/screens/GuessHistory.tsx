@@ -1,12 +1,12 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { proximityToColor, distanceToProximity } from "@/lib/haversine";
-import type { Guess, GameStatus, HotColdSettings } from "./gamemodes";
+import type { Guess, GameStatus, GuessSettings } from "./gamemodes";
 
 interface GuessHistoryProps {
   guesses: Guess[];
   gameStatus: GameStatus;
-  settings: HotColdSettings;
+  settings: GuessSettings;
   targetName: string | null;
   panelOpen: boolean;
   onTogglePanel: () => void;
