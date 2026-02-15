@@ -6,7 +6,9 @@ function StartScreen({ onStartGame }: { onStartGame: () => void }) {
       <div className="flex flex-col items-center h-full gap-8">
         <div className="text-6xl font-bold mt-24 mb-12">Dailies</div>
         <div className="flex flex-row gap-4">
-          <Button className="cursor-pointer px-8 py-8" onClick={onStartGame}>Hot/Cold Country</Button>
+          <Button className="cursor-pointer px-8 py-8" onClick={onStartGame}>
+            Globe
+          </Button>
         </div>
       </div>
     </div>
