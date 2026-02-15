@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { proximityToColor, distanceToProximity } from "@/lib/haversine";
+import { proximityToColor, distanceToProximity, bearingToArrow } from "@/lib/haversine";
 import type { Guess, GameStatus, GuessSettings } from "./gamemodes";
 
 interface GuessHistoryProps {
@@ -40,8 +40,23 @@ function GuessHistory({
       </Button>
       <div className="flex w-87.5 flex-col rounded-lg bg-white p-4 shadow-lg">
         <h2 className="text-lg font-semibold">
-          Guesses ({guesses.length} / {settings.maxGuesses})
+          Guesses ({guesses.length}{settings.maxGuesses === 21 ? "" : ` / ${settings.maxGuesses}`})
         </h2>
+
+        {settings.hintsEnabled && settings.hintStyle === "color" && (
+          <div className="mt-3 flex flex-col gap-1">
+            <div
+              className="h-3 w-full rounded-full"
+              style={{
+                background: "linear-gradient(to right, rgb(255,255,255), rgb(0,0,255), rgb(255,0,0))",
+              }}
+            />
+            <div className="flex justify-between text-xs text-gray-500">
+              <span>Far</span>
+              <span>Close</span>
+            </div>
+          </div>
+        )}
 
         {isGameOver && (
           <div className="mt-3 rounded-md border p-3 text-center">
@@ -69,7 +84,7 @@ function GuessHistory({
               <span>{guess.country.properties.ADMIN}</span>
               {settings.hintsEnabled && settings.hintStyle === "distance" && (
                 <span className="text-gray-500">
-                  {Math.round(guess.distanceKm).toLocaleString()} km
+                  {Math.round(guess.distanceKm).toLocaleString()} km {bearingToArrow(guess.bearingDeg)}
                 </span>
               )}
               {settings.hintsEnabled && settings.hintStyle === "color" && (

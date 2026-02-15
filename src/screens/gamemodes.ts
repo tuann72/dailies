@@ -17,6 +17,7 @@ export interface CountryFeature {
 export interface Guess {
   country: CountryFeature;
   distanceKm: number;
+  bearingDeg: number;
 }
 
 export interface GuessSettings {

@@ -31,6 +31,7 @@ import GuessSettingsPanel from "./GuessSettings";
 import GuessHistory from "./GuessHistory";
 import {
   haversineDistanceKm,
+  bearingDeg,
   distanceToProximity,
   proximityToColor,
 } from "@/lib/haversine";
@@ -71,6 +72,7 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
     setTargetCountry(target);
     setGuesses([]);
     setGameStatus("playing");
+    setPanelOpen(false);
     setRightPanelOpen(true);
   }, [nonAntarcticaCountries]);
 
@@ -119,7 +121,8 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
         feature.properties,
         targetCountry.properties,
       );
-      const newGuess: Guess = { country: feature, distanceKm };
+      const bearing = bearingDeg(feature.properties, targetCountry.properties);
+      const newGuess: Guess = { country: feature, distanceKm, bearingDeg: bearing };
       const newGuesses = [...guesses, newGuess];
       setGuesses(newGuesses);
 
@@ -136,8 +139,17 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
       // Win/loss checks
       if (feature.properties.ADMIN === targetCountry.properties.ADMIN) {
         setGameStatus("won");
-      } else if (newGuesses.length >= guessSettings.maxGuesses) {
+      } else if (guessSettings.maxGuesses !== 21 && newGuesses.length >= guessSettings.maxGuesses) {
         setGameStatus("lost");
+        // Pan to the correct answer
+        globeRef.current?.pointOfView(
+          {
+            lat: targetCountry.properties.LABEL_Y,
+            lng: targetCountry.properties.LABEL_X,
+            altitude: 2,
+          },
+          1000,
+        );
       }
     }
 
@@ -145,7 +157,10 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
     setSelectedCountry("");
   };
 
-  const countryNames = countries.features.map((f) => f.properties.ADMIN);
+  const guessedNames = new Set(guesses.map((g) => g.country.properties.ADMIN));
+  const countryNames = countries.features
+    .map((f) => f.properties.ADMIN)
+    .filter((name) => !guessedNames.has(name));
 
 
   useEffect(() => {
@@ -322,7 +337,6 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
       )}
       <Globe
         ref={globeRef}
-        globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg"
         backgroundImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png"
         polygonsData={getPolygonsData()}
         polygonAltitude={0.01}

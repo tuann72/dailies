@@ -16,6 +16,28 @@ export function haversineDistanceKm(
   return 2 * EARTH_RADIUS_KM * Math.asin(Math.sqrt(h));
 }
 
+export function bearingDeg(
+  from: { LABEL_Y: number; LABEL_X: number },
+  to: { LABEL_Y: number; LABEL_X: number },
+): number {
+  const toRad = (deg: number) => (deg * Math.PI) / 180;
+  const toDeg = (rad: number) => (rad * 180) / Math.PI;
+  const lat1 = toRad(from.LABEL_Y);
+  const lat2 = toRad(to.LABEL_Y);
+  const dLng = toRad(to.LABEL_X - from.LABEL_X);
+  const y = Math.sin(dLng) * Math.cos(lat2);
+  const x =
+    Math.cos(lat1) * Math.sin(lat2) -
+    Math.sin(lat1) * Math.cos(lat2) * Math.cos(dLng);
+  return ((toDeg(Math.atan2(y, x)) % 360) + 360) % 360;
+}
+
+export function bearingToArrow(deg: number): string {
+  const arrows = ["↑", "↗", "→", "↘", "↓", "↙", "←", "↖"];
+  const index = Math.round(deg / 45) % 8;
+  return arrows[index];
+}
+
 export function distanceToProximity(km: number): number {
   return Math.max(0, 1 - km / MAX_DISTANCE_KM);
 }

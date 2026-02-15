@@ -44,7 +44,7 @@ function GuessSettings({
       </div>
 
       {settings.hintsEnabled && (
-        <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between">
           <label className="text-sm font-medium">Hint style</label>
           <Select
             value={settings.hintStyle}
@@ -65,11 +65,11 @@ function GuessSettings({
 
       <div className="flex flex-col gap-1.5">
         <label className="text-sm font-medium">
-          Number of guesses: {settings.maxGuesses}
+          Number of guesses: {settings.maxGuesses === 21 ? "Unlimited" : settings.maxGuesses}
         </label>
         <Slider
           min={1}
-          max={20}
+          max={21}
           step={1}
           value={[settings.maxGuesses]}
           onValueChange={([value]) =>
