@@ -24,6 +24,7 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
     (f) => (f as { properties: { ADMIN: string } }).properties.ADMIN,
   );
 
+
   useEffect(() => {
     fetch("/ne_110m_admin_0_countries.geojson")
       .then((res) => res.json())
@@ -82,20 +83,24 @@ function GlobeGame({ onHome }: { onHome: () => void }) {
       </Button>
       </div>
       <Globe
-        globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg"
-        hexPolygonsData={countries.features}
-        hexPolygonResolution={3}
-        hexPolygonMargin={0.3}
-        hexPolygonUseDots={true}
-        hexPolygonColor={() =>
+        globeImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/earth-night.jpg"
+        backgroundImageUrl="//cdn.jsdelivr.net/npm/three-globe/example/img/night-sky.png"
+        polygonsData={countries.features.filter(
+          (d) =>
+            (d as { properties: { ISO_A2: string } }).properties.ISO_A2 !==
+            "AQ",
+        )}
+        polygonAltitude={0.01}
+        polygonCapColor={() =>
           `#${Math.round(Math.random() * Math.pow(2, 24))
             .toString(16)
             .padStart(6, "0")}`
         }
-        hexPolygonLabel={(obj: object) => {
-          const d = (obj as { properties: { ADMIN: string; ISO_A2: string } })
-            .properties;
-          return `<b>${d.ADMIN} (${d.ISO_A2})</b>`;
+        polygonSideColor={() => "rgba(0, 100, 0, 0.15)"}
+        polygonStrokeColor={() => "#111"}
+        polygonLabel={(obj: object) => {
+          const d = (obj as { properties: { ADMIN: string } }).properties;
+          return `<b>${d.ADMIN}</b>`;
         }}
       />
     </div>
